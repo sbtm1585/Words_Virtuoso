@@ -30,17 +30,20 @@ class WordGame(args: Array<String>) {
         return candidates.readLines().random()
     }
 
-    fun checkGuess(guess: String) {
+    fun checkGuess(guess: String): Boolean {
         when {
             guess.length != 5 -> println("The input isn't a 5-letter word.")
             !guess.matches(Regex("[a-z]{5}")) -> println("One or more letters of the input aren't valid.")
             guess.length != guess.toCharArray().toSet().size -> println("The input has duplicate letters.")
             guess !in allWords.readLines() -> println("The input word isn't included in my words list.")
-            else -> printGuess(guess, word)
+            else -> {
+                return printGuess(guess, word)
+            }
         }
+        return true
     }
 
-    private fun printGuess(guess: String, word: String) {
+    private fun printGuess(guess: String, word: String): Boolean {
         tries++
         val clue = buildString {
             for (i in guess.indices) {
@@ -51,10 +54,10 @@ class WordGame(args: Array<String>) {
                 }
             }
         }.also { clueHistory(it) }
-        getResult(clue, guess)
+        return getResult(clue, guess)
     }
 
-    private fun getResult(clue: String, guess: String) {
+    private fun getResult(clue: String, guess: String): Boolean {
         val cleanClue = clue.filter { it.isUpperCase() }
 
         if (cleanClue.lowercase() == word) {
@@ -70,12 +73,13 @@ class WordGame(args: Array<String>) {
                 duration = (timeEnd - timeStart) / 1000
                 println("The solution was found after $tries tries in $duration seconds.")
             }
-            exitProcess(0)
+            return false
         } else {
             println("")
             history.forEach { println(it) }
             println("\n${wrongChars(guess, word)}")
         }
+        return true
     }
 
     private fun wrongChars(guess: String, word: String): String {
