@@ -62,6 +62,7 @@ class WordGame(args: Array<String>) {
 
         if (cleanClue.lowercase() == word) {
             timeEnd = System.currentTimeMillis()
+            duration = (timeEnd - timeStart) / 1000
             if (history.size == 1) {
                 print("\n")
                 cleanClue.forEach { print("\u001b[48:5:10m${it.uppercase()}\u001b[0m") }
@@ -70,7 +71,6 @@ class WordGame(args: Array<String>) {
                 println("")
                 history.forEach { println(it) }
                 println("\nCorrect!")
-                duration = (timeEnd - timeStart) / 1000
                 println("The solution was found after $tries tries in $duration seconds.")
             }
             return false
